@@ -8,6 +8,8 @@ module.exports = {
     },
     getSingleUser(req, res) {
         User.findOne({ _id: req.params.userId })
+            .populate({ path: 'thought', select: '-__v' })
+            .populate({ path: 'friend', select: '-__v' })
             .then((user) =>
             !user
                 ? res.status(400).json({ message: 'There is no user with that associated ID.' })
