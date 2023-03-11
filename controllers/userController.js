@@ -11,9 +11,9 @@ module.exports = {
             .populate({ path: 'thought', select: '-__v' })
             .populate({ path: 'friend', select: '-__v' })
             .then((user) =>
-            !user
-                ? res.status(400).json({ message: 'There is no user with that associated ID.' })
-                : res.json(user))
+                !user
+                    ? res.status(400).json({ message: 'There is no user with that associated ID.' })
+                    : res.json(user))
             .catch((err) => res.status(500).json(err));
     },
     createUser(req, res) {
@@ -22,7 +22,16 @@ module.exports = {
             .catch((err) => res.status(500).json(err));
     },
     updateUser(req, res) {
-
+        User.findOneAndUpdate(
+            { _id: req.params.userId },
+            { ...req.body },
+            { new: true },
+            (err, result) => {
+                !result
+                    ? res.status(500).json({ message: 'Something went wrong! Try again.' })
+                    : res.json(result);
+            }
+        );
     },
     deleteUser(req, res) {
 
