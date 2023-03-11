@@ -7,7 +7,12 @@ module.exports = {
             .catch((err) => res.status(500).json(err));
     },
     getSingleUser(req, res) {
-
+        User.findOne({ _id: req.params.userId })
+            .then((user) =>
+            !user
+                ? res.status(400).json({ message: 'There is no user with that associated ID.' })
+                : res.json(user))
+            .catch((err) => res.status(500).json(err));
     },
     createUser(req, res) {
 
