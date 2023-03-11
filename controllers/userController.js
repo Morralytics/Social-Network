@@ -15,7 +15,9 @@ module.exports = {
             .catch((err) => res.status(500).json(err));
     },
     createUser(req, res) {
-
+        User.create(req.body)
+            .then((userData) => res.json(userData))
+            .catch((err) => res.status(500).json(err));
     },
     updateUser(req, res) {
 
