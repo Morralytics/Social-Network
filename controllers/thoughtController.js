@@ -15,7 +15,12 @@ module.exports = {
             .catch((err) => res.status(500).json(err));
     },
     createThought(req, res) {
-
+        Thought.create(req.body)
+            .then((thoughtData) => {
+                
+            })
+            .then(res.json(thoughtData))
+            .catch((err) => res.status(500).json(err));
     },
     updateThought(req, res) {
 
