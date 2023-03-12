@@ -27,7 +27,17 @@ module.exports = {
             .catch((err) => res.status(500).json(err));
     },
     updateThought(req, res) {
-
+        Thought.findOneAndUpdate(
+            { _id: req.params.thoughtId },
+            { ...req.body },
+            { new: true },
+        )
+        .then((result) =>
+            !result
+                ? res.status(400).json({ message: 'Something went wront! Try again.'})
+                : res.json(result)
+        )
+        .catch((err) => res.status(500).json(err));
     },
     deleteThought(req, res) {
 
