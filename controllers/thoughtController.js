@@ -1,4 +1,4 @@
-const { User, Thought } = require('../models');
+const { User, Thought, Reaction } = require('../models');
 
 module.exports = {
     getThoughts(req, res) {
@@ -19,7 +19,7 @@ module.exports = {
             .then((thoughtData) => {
                 return User.findOneAndUpdate(
                     { _id: req.body.userId },
-                    { $push: { thoughts: thoughtData._id}},
+                    { $push: { thoughts: thoughtData._id } },
                     { new: true }
                 );
             })
@@ -32,14 +32,21 @@ module.exports = {
             { ...req.body },
             { new: true },
         )
-        .then((result) =>
-            !result
-                ? res.status(400).json({ message: 'Something went wront! Try again.'})
-                : res.json(result)
-        )
-        .catch((err) => res.status(500).json(err));
+            .then((result) =>
+                !result
+                    ? res.status(400).json({ message: 'Something went wront! Try again.' })
+                    : res.json(result)
+            )
+            .catch((err) => res.status(500).json(err));
     },
     deleteThought(req, res) {
-
+        Thought.findOneAndDelete({ _id: req.params.thoughtId })
+            .then((thought) =>
+                !thought
+                    ? res.status(400).json({ message: 'There is no thought with that associated ID.' })
+                    : Reaction.deleteMany({ _id: { $in: thought.reactions } })
+            )
+            .then(() => res.json({ message: 'Thoughts and reactions associated with this thought are deleted!' }))
+            .catch((err) => res.status(500).json(err));
     },
 };
