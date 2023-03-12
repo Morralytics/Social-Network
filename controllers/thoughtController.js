@@ -1,4 +1,4 @@
-const { User, Thought } = require('../models');
+const { User, Thought, Reaction } = require('../models');
 
 module.exports = {
     getThoughts(req, res) {
@@ -44,27 +44,21 @@ module.exports = {
             )
             .catch((err) => res.status(500).json(err));
     },
-    // deleteThought(req, res) {
-    //     Thought.findOneAndDelete({ _id: req.params.thoughtId })
-    //         .then((thought) =>
-    //             !thought
-    //                 ? res.status(400).json({ message: 'There is no thought with that associated ID.' })
-    //                 // : Reaction.deleteMany({ _id: { $in: thought.reactions } })
-    //                 : next()
-    //         )
-    //         // .then(() => res.json({ message: 'Thoughts and reactions associated with this thought are deleted!' }))
-    //         .then(() => res.json({ message: "Thought has been deleted."}))
-    //         .catch((err) => res.status(500).json(err));
-    // },
     deleteThought(req, res) {
         Thought.findOneAndDelete({ _id: req.params.thoughtId })
             .then((thought) => {
                 return User.findOneAndUpdate(
-                    { _id: req.body.userId },
+                    { _id: thought.userId },
                     { $pull: { thoughts: thought._id } },
                 );
             })
             .then(() => res.json({ message: "Thought has been deleted." }))
             .catch((err) => res.status(500).json(err));
-    }
+    },
+    createReaction(req, res) {
+
+    },
+    deleteReaction(req, res) {
+
+    },
 };
