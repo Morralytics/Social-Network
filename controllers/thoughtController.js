@@ -1,4 +1,4 @@
-const { User, Thought, Reaction } = require('../models');
+const { User, Thought } = require('../models');
 
 module.exports = {
     getThoughts(req, res) {
@@ -15,16 +15,21 @@ module.exports = {
             .catch((err) => res.status(500).json(err));
     },
     createThought(req, res) {
-        Thought.create(req.body)
-            .then((thoughtData) => {
-                return User.findOneAndUpdate(
-                    { _id: req.body.userId },
-                    { $push: { thoughts: thoughtData._id } },
-                    { new: true }
-                );
-            })
-            .then(res.json(thoughtData))
-            .catch((err) => res.status(500).json(err));
+        User.find({ _id: req.body.userId })
+            .then(Thought.create(req.body)
+                    .then((thought) => {
+                        return User.findOneAndUpdate(
+                            { _id: req.body.userId },
+                            { $addToSet: { thoughts: thought._id } },
+                            { new: true }
+                        );
+                    })
+                    .then((userThought) =>
+                        !userThought
+                            ? res.status(400).json({ message: 'There is no user with that associated ID.' })
+                            : res.json(userThought)
+                    )
+                    .catch((err) => res.status(400).json(err)));
     },
     updateThought(req, res) {
         Thought.findOneAndUpdate(
@@ -39,14 +44,27 @@ module.exports = {
             )
             .catch((err) => res.status(500).json(err));
     },
+    // deleteThought(req, res) {
+    //     Thought.findOneAndDelete({ _id: req.params.thoughtId })
+    //         .then((thought) =>
+    //             !thought
+    //                 ? res.status(400).json({ message: 'There is no thought with that associated ID.' })
+    //                 // : Reaction.deleteMany({ _id: { $in: thought.reactions } })
+    //                 : next()
+    //         )
+    //         // .then(() => res.json({ message: 'Thoughts and reactions associated with this thought are deleted!' }))
+    //         .then(() => res.json({ message: "Thought has been deleted."}))
+    //         .catch((err) => res.status(500).json(err));
+    // },
     deleteThought(req, res) {
         Thought.findOneAndDelete({ _id: req.params.thoughtId })
-            .then((thought) =>
-                !thought
-                    ? res.status(400).json({ message: 'There is no thought with that associated ID.' })
-                    : Reaction.deleteMany({ _id: { $in: thought.reactions } })
-            )
-            .then(() => res.json({ message: 'Thoughts and reactions associated with this thought are deleted!' }))
+            .then((thought) => {
+                return User.findOneAndUpdate(
+                    { _id: req.body.userId },
+                    { $pull: { thoughts: thought._id } },
+                );
+            })
+            .then(() => res.json({ message: "Thought has been deleted." }))
             .catch((err) => res.status(500).json(err));
-    },
+    }
 };
