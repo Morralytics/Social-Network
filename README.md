@@ -52,7 +52,6 @@ Tests will be completted at a later date.
 
 ## Questions
 
-[Link to Social Network GitHub repository](https://github.com/Volexity21/Social-Network)
 [Link to GitHub profile](https://github.com/Volexity21)
 
 With further questions you can reach me via email at:
