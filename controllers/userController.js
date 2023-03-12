@@ -62,12 +62,12 @@ module.exports = {
             { _id: req.params.userId },
             { $pull: { friends: req.params.friendId } },
             { new: true },
-            )
+        )
             .then((result) =>
                 !result
                     ? res.status(400).json({ message: 'There is no user with that associated ID' })
                     : res.json(result)
-        )
+            )
             .catch((err) => res.status(500).json(err));
     },
 };
