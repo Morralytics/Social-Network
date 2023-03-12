@@ -31,7 +31,8 @@ module.exports = {
                 !result
                     ? res.status(400).json({ message: 'Something went wrong! Try again.' })
                     : res.json(result)
-        );
+        )
+        .catch((err) => res.status(500).json(err));
     },
     deleteUser(req, res) {
         User.findOneAndDelete({ _id: req.params.userId })
@@ -52,7 +53,8 @@ module.exports = {
                 !result
                     ? res.status(400).json({ message: 'There is no user with that associated ID' })
                     : res.json(result)
-        );
+        )
+        .catch((err) => res.status(500).json(err));
     },
     removeFriend(req, res) {
         User.findOneAndUpdate(
@@ -63,6 +65,7 @@ module.exports = {
                 !result
                     ? res.status(400).json({ message: 'There is no user with that associated ID' })
                     : res.json(result)
-        );
+        )
+        .catch((err) => res.status(500).json(err));
     },
 };
