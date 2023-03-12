@@ -50,7 +50,18 @@ module.exports = {
             { new: true },
             (err, result) =>
                 !result
-                    ? res.status(400).json({ message: 'Added new friend!' })
+                    ? res.status(400).json({ message: 'There is no user with that associated ID' })
+                    : res.json(result)
+        );
+    },
+    removeFriend(req, res) {
+        User.findOneAndUpdate(
+            { _id: req.params.userId },
+            { $pull: { friends: req.params.friendId }},
+            { new: true },
+            (err, result) =>
+                !result
+                    ? res.status(400).json({ message: 'There is no user with that associated ID' })
                     : res.json(result)
         );
     },
