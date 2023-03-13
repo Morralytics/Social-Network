@@ -30,6 +30,8 @@ This API will be used with the addition of a front-end framework to create a new
 
 You can view a walkthrough video explaining the use of this API below!
 
+[Link to my Youtube Page with a walkthrough on this application!](https://www.youtube.com/watch?v=HXpSVpoo8e4)
+
 ## License
 
 MIT License
